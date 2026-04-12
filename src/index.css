@@ -1,0 +1,9 @@
+/* index.css — reset only, all design tokens live in styles/global.css */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+}
