@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function Hero() {
+export default function Hero({ onVideoReady }) {
   const [isMobile, setIsMobile] = useState(false)
   
   const sectionRef   = useRef(null)
@@ -15,6 +15,13 @@ export default function Hero() {
   const subRef       = useRef(null)
   const ctaRef       = useRef(null)
   const scrollIndRef = useRef(null)
+  
+  // Also handle video readiness if it's already loaded or cached
+  useEffect(() => {
+    if (videoRef.current && videoRef.current.readyState >= 3) {
+      if (onVideoReady) onVideoReady()
+    }
+  }, [onVideoReady])
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768)
@@ -77,6 +84,8 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload="auto"
+        onCanPlayThrough={() => onVideoReady && onVideoReady()}
         style={{
           position: 'absolute',
           inset: 0,

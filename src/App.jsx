@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
   const [loaderDone, setLoaderDone] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const lenisRef = useRef(null)
 
   // ── Lenis smooth scroll ──
@@ -57,7 +58,7 @@ export default function App() {
       <Cursor />
 
       {/* ── Loader ── */}
-      <Loader onComplete={() => setLoaderDone(true)} />
+      <Loader isReady={isVideoLoaded} onComplete={() => setLoaderDone(true)} />
 
       {/* ── Main content ── */}
       <main style={{
@@ -67,7 +68,7 @@ export default function App() {
         pointerEvents: loaderDone ? 'auto' : 'none',
         background: '#0A0A0F', // Solid background for all sections
       }}>
-        <Hero />
+        <Hero onVideoReady={() => setIsVideoLoaded(true)} />
         <About />
         <Skills />
         <Projects />
