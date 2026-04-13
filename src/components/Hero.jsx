@@ -6,23 +6,24 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero({ onVideoReady }) {
   const [isMobile, setIsMobile] = useState(false)
+  const [framesLoaded, setFramesLoaded] = useState(false)
   
   const sectionRef   = useRef(null)
   const videoRef     = useRef(null)
+  const canvasRef    = useRef(null)
+  const contextRef   = useRef(null)
+  const framesRef    = useRef([])
   const overlayRef   = useRef(null)
   const eyebrowRef   = useRef(null)
   const titleRef     = useRef(null)
   const subRef       = useRef(null)
   const ctaRef       = useRef(null)
   const scrollIndRef = useRef(null)
-  
-  // Also handle video readiness if it's already loaded or cached
-  useEffect(() => {
-    if (videoRef.current && videoRef.current.readyState >= 3) {
-      if (onVideoReady) onVideoReady()
-    }
-  }, [onVideoReady])
 
+  const TOTAL_FRAMES = 240
+  const loopRef = useRef(null)
+
+  // ── 1. Handle Responsive Check ──
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768)
     handleResize()
@@ -30,10 +31,37 @@ export default function Hero({ onVideoReady }) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // ── 2. Preload Canvas Frames (Desktop Only) ──
+  useEffect(() => {
+    if (isMobile) return
+
+    let loadedCount = 0
+    const frames = []
+
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image()
+      img.src = `/hero_frames/frame_${String(i).padStart(4, '0')}.webp`
+      img.onload = () => {
+        loadedCount++
+        if (loadedCount === TOTAL_FRAMES) {
+          setFramesLoaded(true)
+          if (onVideoReady) onVideoReady()
+        }
+      }
+      img.onerror = () => {
+        console.error(`Failed to load frame ${i}`)
+        loadedCount++ // Proceed anyway
+      }
+      frames.push(img)
+    }
+    framesRef.current = frames
+  }, [isMobile, onVideoReady])
+
+  // ── 3. Canvas Looping & Animations ──
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // ── Text entrance after loader ──
+      // Entrance Animations
       gsap.set([eyebrowRef.current, titleRef.current, subRef.current, ctaRef.current], {
         opacity: 0, y: 40,
       })
@@ -43,7 +71,7 @@ export default function Hero({ onVideoReady }) {
         .to(subRef.current,     { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
         .to(ctaRef.current,     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.5')
 
-      // ── Scroll: video scales, text drifts up, overlay darkens ──
+      // Scroll Trigger logic
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
@@ -52,7 +80,10 @@ export default function Hero({ onVideoReady }) {
         onUpdate: (self) => {
           const p = self.progress
           if (overlayRef.current) overlayRef.current.style.opacity = String(0.45 + p * 0.3)
-          if (videoRef.current) gsap.set(videoRef.current, { scale: 1 + p * 0.08 })
+          
+          const target = isMobile ? videoRef.current : canvasRef.current
+          if (target) gsap.set(target, { scale: 1 + p * 0.08 })
+          
           gsap.set(titleRef.current,   { y: p * -70 })
           gsap.set(eyebrowRef.current, { y: p * -45 })
           gsap.set(subRef.current,     { y: p * -35 })
@@ -60,52 +91,91 @@ export default function Hero({ onVideoReady }) {
         },
       })
 
-      // ── Scroll indicator bounce ──
+      // Canvas Looper
+      if (!isMobile && canvasRef.current) {
+        const canvas = canvasRef.current
+        const context = canvas.getContext('2d')
+        contextRef.current = context
+
+        const updateCanvasSize = () => {
+          const dpr = window.devicePixelRatio || 1
+          canvas.width = window.innerWidth * dpr
+          canvas.height = window.innerHeight * dpr
+        }
+        updateCanvasSize()
+        window.addEventListener('resize', updateCanvasSize)
+
+        const render = (index) => {
+          const img = framesRef.current[index]
+          if (!img || !img.complete) return
+
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height)
+          const x = (canvas.width / 2) - (img.width / 2) * scale
+          const y = (canvas.height / 2) - (img.height / 2) * scale
+          
+          context.clearRect(0, 0, canvas.width, canvas.height)
+          context.drawImage(img, x, y, img.width * scale, img.height * scale)
+        }
+
+        // Play loop
+        const playHead = { frame: 0 }
+        loopRef.current = gsap.to(playHead, {
+          frame: TOTAL_FRAMES - 1,
+          duration: 8,
+          repeat: -1,
+          ease: 'none',
+          onUpdate: () => render(Math.round(playHead.frame))
+        })
+
+        return () => window.removeEventListener('resize', updateCanvasSize)
+      }
+
+      // Scroll indicator bounce
       gsap.to(scrollIndRef.current, {
         opacity: 0.08, y: 10,
         repeat: -1, yoyo: true, duration: 1.5, ease: 'power1.inOut',
       })
 
     }, sectionRef)
+
     return () => ctx.revert()
-  }, [])
+  }, [isMobile, framesLoaded])
+
+  const mediaStyle = {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    zIndex: 0,
+    willChange: 'transform',
+  }
 
   return (
     <section ref={sectionRef} id="hero" style={{
       position: 'relative', width: '100%', height: '100vh', overflow: 'hidden',
-      background: 'radial-gradient(circle at center, #1A1A22 0%, #0A0A0F 100%)', // Fallback
+      background: '#0A0A0F',
     }}>
-      {/* Background Video */}
-      <video
-        ref={videoRef}
-        key={isMobile ? 'mobile' : 'desktop'}
-        src={isMobile ? "/Mobile_view.mp4" : "/Hero.mp4"}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        onCanPlayThrough={() => onVideoReady && onVideoReady()}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: 0,
-          willChange: 'transform',
-        }}
-      />
+      {/* Background Media */}
+      {isMobile ? (
+        <video
+          ref={videoRef}
+          src="/Mobile_view.mp4"
+          autoPlay muted loop playsInline preload="auto"
+          onCanPlayThrough={() => onVideoReady && onVideoReady()}
+          style={mediaStyle}
+        />
+      ) : (
+        <canvas
+          ref={canvasRef}
+          style={{ ...mediaStyle, objectFit: 'cover' }}
+        />
+      )}
 
       {/* Watermark Cover */}
       <div style={{
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        width: 120,
-        height: 40,
-        background: '#0A0A0F',
-        zIndex: 1,
+        position: 'absolute', bottom: 0, right: 0, width: 120, height: 40,
+        background: '#0A0A0F', zIndex: 1,
       }} />
 
       {/* Dark Overlay */}
