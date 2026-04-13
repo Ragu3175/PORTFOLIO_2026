@@ -18,6 +18,17 @@ export default function App() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const lenisRef = useRef(null)
 
+  // ── Reveal Root after React is ready ──
+  useEffect(() => {
+    const root = document.getElementById('root')
+    if (root) {
+      // Small delay to ensure the browser has parsed the initial invisible state
+      requestAnimationFrame(() => {
+        root.classList.add('loaded')
+      })
+    }
+  }, [])
+
   // ── Lenis smooth scroll ──
   useEffect(() => {
     const lenis = new Lenis({
@@ -64,7 +75,7 @@ export default function App() {
       <main style={{
         position: 'relative', zIndex: 1,
         opacity: loaderDone ? 1 : 0,
-        transition: 'opacity 0.6s ease',
+        visibility: loaderDone ? 'visible' : 'hidden',
         pointerEvents: loaderDone ? 'auto' : 'none',
         background: '#0A0A0F', // Solid background for all sections
       }}>

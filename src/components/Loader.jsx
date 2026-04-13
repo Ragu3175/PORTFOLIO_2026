@@ -14,11 +14,7 @@ export default function Loader({ isReady, onComplete }) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          if (onComplete) onComplete()
-        }
-      })
+      const tl = gsap.timeline()
       tlRef.current = tl
 
       // Set initial state
@@ -82,7 +78,14 @@ export default function Loader({ isReady, onComplete }) {
         yPercent: -100,
         duration: 0.8,
         ease: 'power4.inOut',
+        onStart: () => {
+          if (onComplete) onComplete()
+        }
       })
+      .to({}, { duration: 0.1, onComplete: () => {
+        // Ensure loader is hidden from DOM after animation
+        if (loaderRef.current) loaderRef.current.style.display = 'none'
+      }})
       .play()
     }
   }, [isReady])
@@ -114,7 +117,10 @@ export default function Loader({ isReady, onComplete }) {
               color: '#F0EDE6',
               letterSpacing: '0.15em',
               display: 'inline-block',
-              fontFamily: 'Clash Display, DM Sans, sans-serif'
+              fontFamily: 'Clash Display, DM Sans, sans-serif',
+              opacity: 0,
+              transform: 'translateY(40px)',
+              clipPath: 'inset(0 100% 0 0)'
             }}
           >
             {l}
@@ -129,7 +135,9 @@ export default function Loader({ isReady, onComplete }) {
             letterSpacing: '0.15em',
             display: 'inline-block',
             marginLeft: '4px',
-            fontFamily: 'Clash Display, DM Sans, sans-serif'
+            fontFamily: 'Clash Display, DM Sans, sans-serif',
+            opacity: 0,
+            transform: 'scale(0)'
           }}
         >
           .R

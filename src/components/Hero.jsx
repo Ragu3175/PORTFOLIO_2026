@@ -65,7 +65,7 @@ export default function Hero({ onVideoReady }) {
       gsap.set([eyebrowRef.current, titleRef.current, subRef.current, ctaRef.current], {
         opacity: 0, y: 40,
       })
-      gsap.timeline({ delay: 0.2 })
+      gsap.timeline({ delay: 0 })
         .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' })
         .to(titleRef.current,   { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, '-=0.65')
         .to(subRef.current,     { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
@@ -117,7 +117,11 @@ export default function Hero({ onVideoReady }) {
           context.drawImage(img, x, y, img.width * scale, img.height * scale)
         }
 
-        // Play loop
+        // ── Immediate first frame draw ──
+        render(0)
+        gsap.to(canvas, { opacity: 1, duration: 0.4, ease: 'power2.out' })
+
+        // ── Play loop ──
         const playHead = { frame: 0 }
         loopRef.current = gsap.to(playHead, {
           frame: TOTAL_FRAMES - 1,
@@ -168,7 +172,7 @@ export default function Hero({ onVideoReady }) {
       ) : (
         <canvas
           ref={canvasRef}
-          style={{ ...mediaStyle, objectFit: 'cover' }}
+          style={{ ...mediaStyle, objectFit: 'cover', opacity: 0 }}
         />
       )}
 
@@ -218,7 +222,7 @@ export default function Hero({ onVideoReady }) {
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
         padding: '0 clamp(1.5rem,6vw,6rem) 5rem',
       }}>
-        <p ref={eyebrowRef} style={{ fontSize: '0.68rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.4)', marginBottom: '1.25rem', fontFamily: 'DM Sans,sans-serif' }}>
+        <p ref={eyebrowRef} style={{ fontSize: '0.68rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.4)', marginBottom: '1.25rem', fontFamily: 'DM Sans,sans-serif', opacity: 0 }}>
           Full Stack Developer · MERN · Bengaluru
         </p>
         <h1 ref={titleRef} style={{
@@ -226,13 +230,14 @@ export default function Hero({ onVideoReady }) {
           fontSize: 'clamp(4rem,13vw,12rem)', fontWeight: 700,
           lineHeight: 0.88, letterSpacing: '-0.03em', color: '#F0EDE6',
           willChange: 'transform,opacity',
+          opacity: 0,
         }}>
           RAGURAM <span style={{ color: '#E8FF47' }}>R.</span>
         </h1>
-        <p ref={subRef} style={{ marginTop: '1.5rem', fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.4)', fontFamily: 'DM Sans,sans-serif' }}>
+        <p ref={subRef} style={{ marginTop: '1.5rem', fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.4)', fontFamily: 'DM Sans,sans-serif', opacity: 0 }}>
           React · Node · MongoDB · AWS · Docker
         </p>
-        <div ref={ctaRef} style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div ref={ctaRef} style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', opacity: 0 }}>
           <HoverBtn onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} outline>View Work</HoverBtn>
           <HoverBtn onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>Hire Me</HoverBtn>
         </div>
