@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
+  const [isMobile, setIsMobile] = useState(false)
+  
   const sectionRef   = useRef(null)
   const videoRef     = useRef(null)
   const overlayRef   = useRef(null)
@@ -13,6 +15,13 @@ export default function Hero() {
   const subRef       = useRef(null)
   const ctaRef       = useRef(null)
   const scrollIndRef = useRef(null)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -62,7 +71,8 @@ export default function Hero() {
       {/* Background Video */}
       <video
         ref={videoRef}
-        src="/Hero.mp4"
+        key={isMobile ? 'mobile' : 'desktop'}
+        src={isMobile ? "/Mobile_view.mp4" : "/Hero.mp4"}
         autoPlay
         muted
         loop
