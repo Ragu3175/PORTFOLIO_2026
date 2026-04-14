@@ -58,3 +58,10 @@ html.lenis, html.lenis body { height: auto; }
   color: var(--surface);
   font-family: 'DM Sans', sans-serif;
 }
+
+/* Grid Pulse Animation for Identity Break */
+@keyframes gridPulse {
+  0% { opacity: 0.05; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.05; }
+}

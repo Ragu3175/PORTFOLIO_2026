@@ -161,6 +161,7 @@ export default function Loader({ isReady, onComplete }) {
         
         {/* Status message */}
         <div 
+          ref={statusRef}
           style={{ 
             height: '12px',
             opacity: showStatus ? 1 : 0,

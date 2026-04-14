@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -19,15 +19,33 @@ export default function Contact() {
   const emailWrapRef = useRef(null)
   const emailLineRef = useRef(null)
   const linksRef     = useRef([])
+  const foldRef      = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-
       // Set initial hidden state
       gsap.set([word1Ref.current, word2Ref.current, word3Ref.current], { opacity: 0, y: 70 })
       gsap.set(emailWrapRef.current, { opacity: 0 })
       gsap.set(emailLineRef.current, { scaleX: 0, transformOrigin: 'left center' })
       gsap.set(linksRef.current.filter(Boolean), { opacity: 0, y: 24 })
+
+      // 3D Page Fold Transition
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'bottom bottom',
+        end: 'bottom bottom+=100',
+        scrub: 1,
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (foldRef.current) {
+            gsap.set(foldRef.current, {
+              rotateX: p * -20,
+              transformOrigin: 'bottom center',
+              opacity: 1 - (p * 0.5)
+            });
+          }
+        }
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -85,119 +103,128 @@ export default function Contact() {
         padding: '8rem clamp(2rem,6vw,6rem) 5rem',
         overflow: 'hidden',
         background: '#0A0A0F',
+        perspective: '1500px'
       }}
     >
-      {/* Section label */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '5rem' }}>
-        <span className="section-label">05 · Contact</span>
-        <div style={{ width: 60, height: 1, background: 'var(--surface)' }} />
-      </div>
-
-      {/* Headline */}
-      <div className="font-display" style={{
-        fontSize: 'clamp(3.5rem, 10vw, 10rem)',
-        fontWeight: 700,
-        lineHeight: 0.92,
-        letterSpacing: '-0.03em',
+      {/* The Page Fold Wrapper */}
+      <div ref={foldRef} style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        willChange: 'transform'
       }}>
-        <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-          <span ref={word1Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>LET'S</span>
+        {/* Section label */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '5rem' }}>
+          <span className="section-label">08 · Contact</span>
+          <div style={{ width: 60, height: 1, background: 'var(--surface)' }} />
         </div>
-        <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-          <span ref={word2Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>BUILD</span>
-        </div>
-        <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-          <span ref={word3Ref} style={{ display: 'inline-block', color: 'var(--lime)' }}>SOMETHING.</span>
-        </div>
-      </div>
 
-      {/* Email */}
-      <div ref={emailWrapRef} style={{ marginTop: '4rem', display: 'inline-block', position: 'relative' }}>
-        <a
-          href="mailto:ragu317317@gmail.com"
-          data-mag
-          style={{
-            display: 'block',
-            fontFamily: 'Clash Display, DM Sans, sans-serif',
-            fontWeight: 500,
-            fontSize: 'clamp(1rem, 2.5vw, 2rem)',
-            letterSpacing: '-0.01em',
-            color: 'var(--cream)',
-            textDecoration: 'none',
-            transition: 'color 0.3s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
-          onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
-        >
-          ragu317317@gmail.com
-        </a>
-        <div
-          ref={emailLineRef}
-          style={{
-            position: 'absolute', bottom: -4, left: 0,
-            width: '100%', height: 1,
-            background: 'var(--lime)',
-          }}
-        />
-      </div>
+        {/* Headline */}
+        <div className="font-display" style={{
+          fontSize: 'clamp(3.5rem, 10vw, 10rem)',
+          fontWeight: 700,
+          lineHeight: 0.92,
+          letterSpacing: '-0.03em',
+        }}>
+          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
+            <span ref={word1Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>LET'S</span>
+          </div>
+          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
+            <span ref={word2Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>BUILD</span>
+          </div>
+          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
+            <span ref={word3Ref} style={{ display: 'inline-block', color: 'var(--lime)' }}>SOMETHING.</span>
+          </div>
+        </div>
 
-      {/* Links row */}
-      <div style={{ marginTop: '5rem', display: 'flex', flexWrap: 'wrap', gap: '3rem 4rem' }}>
-        {LINKS.map((link, i) => (
+        {/* Email */}
+        <div ref={emailWrapRef} style={{ marginTop: '4rem', display: 'inline-block', position: 'relative' }}>
           <a
-            key={i}
-            ref={el => linksRef.current[i] = el}
-            href={link.href}
-            target={link.download ? undefined : '_blank'}
-            rel="noreferrer"
-            download={link.download || undefined}
+            href="mailto:ragu317317@gmail.com"
             data-mag
             style={{
-              display: 'flex', flexDirection: 'column', gap: 6,
-              textDecoration: 'none',
+              display: 'block',
+              fontFamily: 'Clash Display, DM Sans, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(1rem, 2.5vw, 2rem)',
+              letterSpacing: '-0.01em',
               color: 'var(--cream)',
+              textDecoration: 'none',
               transition: 'color 0.3s',
             }}
             onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
             onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
           >
-            <span style={{
-              fontFamily: 'Clash Display, DM Sans, sans-serif',
-              fontWeight: 600, fontSize: '1.05rem', letterSpacing: '0.03em',
-            }}>
-              {link.label}
-            </span>
-            <span style={{
-              fontSize: '0.68rem', letterSpacing: '0.18em', textTransform: 'uppercase',
-              color: 'rgba(240,237,230,0.35)', fontFamily: 'DM Sans, sans-serif',
-            }}>
-              {link.sub}
-            </span>
+            ragu317317@gmail.com
           </a>
-        ))}
-      </div>
+          <div
+            ref={emailLineRef}
+            style={{
+              position: 'absolute', bottom: -4, left: 0,
+              width: '100%', height: 1,
+              background: 'var(--lime)',
+            }}
+          />
+        </div>
 
-      {/* Footer bar */}
-      <div style={{
-        marginTop: '8rem', paddingTop: '2rem',
-        borderTop: '1px solid var(--surface)',
-        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
-      }}>
-        <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
-          Raguram R · Full Stack Developer · 2025
-        </span>
-        <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
-          Built with React + GSAP + Lenis
-        </span>
-      </div>
+        {/* Links row */}
+        <div style={{ marginTop: '5rem', display: 'flex', flexWrap: 'wrap', gap: '3rem 4rem' }}>
+          {LINKS.map((link, i) => (
+            <a
+              key={i}
+              ref={el => linksRef.current[i] = el}
+              href={link.href}
+              target={link.download ? undefined : '_blank'}
+              rel="noreferrer"
+              download={link.download || undefined}
+              data-mag
+              style={{
+                display: 'flex', flexDirection: 'column', gap: 6,
+                textDecoration: 'none',
+                color: 'var(--cream)',
+                transition: 'color 0.3s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
+            >
+              <span style={{
+                fontFamily: 'Clash Display, DM Sans, sans-serif',
+                fontWeight: 600, fontSize: '1.05rem', letterSpacing: '0.03em',
+              }}>
+                {link.label}
+              </span>
+              <span style={{
+                fontSize: '0.68rem', letterSpacing: '0.18em', textTransform: 'uppercase',
+                color: 'rgba(240,237,230,0.35)', fontFamily: 'DM Sans, sans-serif',
+              }}>
+                {link.sub}
+              </span>
+            </a>
+          ))}
+        </div>
 
-      {/* Background lime glow (bottom left) */}
-      <div style={{
-        position: 'absolute', bottom: -100, left: -100,
-        width: 350, height: 350, borderRadius: '50%',
-        background: 'var(--lime)', opacity: 0.04,
-        filter: 'blur(80px)', pointerEvents: 'none',
-      }} />
+        {/* Footer bar */}
+        <div style={{
+          marginTop: '8rem', paddingTop: '2rem',
+          borderTop: '1px solid var(--surface)',
+          display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
+        }}>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
+            Raguram R · Full Stack Developer · 2025
+          </span>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
+            Built with React + GSAP + Lenis
+          </span>
+        </div>
+
+        {/* Background lime glow (bottom left) */}
+        <div style={{
+          position: 'absolute', bottom: -100, left: -100,
+          width: 350, height: 350, borderRadius: '50%',
+          background: 'var(--lime)', opacity: 0.04,
+          filter: 'blur(80px)', pointerEvents: 'none',
+        }} />
+      </div>
     </section>
   )
 }

@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Skills sits over shot2→shot3 transition (frames ~360-600)
 const ROWS = [
   { items: ['React.js','Next.js','JavaScript','TypeScript','Tailwind CSS','Three.js','GSAP','React.js','Next.js','JavaScript','TypeScript','Tailwind CSS','Three.js','GSAP'], speed: 35, dir: -1 },
   { items: ['Node.js','Express','MongoDB','PostgreSQL','JWT','Socket.IO','REST APIs','Node.js','Express','MongoDB','PostgreSQL','JWT','Socket.IO','REST APIs'], speed: 28, dir: 1 },
@@ -17,9 +16,26 @@ export default function Skills() {
   const rowRefs    = useRef([])
   const tweensRef  = useRef([])
   const tickerRef  = useRef(null)
+  const slatsRef   = useRef([])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // 1. Venetian Blinds Animation
+      const slats = slatsRef.current.filter(Boolean);
+      gsap.set(slats, { rotateX: 0, opacity: 1 });
+
+      gsap.to(slats, {
+        rotateX: -90,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power3.inOut',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse',
+        }
+      });
 
       rowRefs.current.forEach((rowEl, i) => {
         if (!rowEl) return
@@ -73,7 +89,28 @@ export default function Skills() {
   return (
     <section ref={sectionRef} id="skills" style={{
       position: 'relative', width: '100%', minHeight: '120vh', paddingBottom: '6rem', overflow: 'hidden',
+      perspective: '1000px'
     }}>
+      {/* Venetian Blinds Overlay */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 10,
+        pointerEvents: 'none', display: 'flex', flexDirection: 'column'
+      }}>
+        {Array(8).fill(0).map((_, i) => (
+          <div
+            key={i}
+            ref={el => slatsRef.current[i] = el}
+            style={{
+              flex: 1,
+              background: 'var(--bg)',
+              borderBottom: '1px solid rgba(232,255,71,0.1)',
+              transformOrigin: 'top center',
+              willChange: 'transform'
+            }}
+          />
+        ))}
+      </div>
+
       {/* Overlay — darker centre for text, lighter edges so canvas breathes */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -85,7 +122,7 @@ export default function Skills() {
           display: 'flex', alignItems: 'center', gap: 16,
           padding: '8rem clamp(1.5rem,6vw,6rem) 5rem',
         }}>
-          <span className="section-label">03 · Skills</span>
+          <span className="section-label">04 · Skills</span>
           <div style={{ width: 50, height: 1, background: '#3A3A3A' }} />
         </div>
 

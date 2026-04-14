@@ -90,9 +90,10 @@ export default function Projects() {
       ScrollTrigger.create({
         trigger: wrapperRef.current,
         start: 'top top',
-        end: () => `+=${total * window.innerHeight}`,
-        pin: stickyRef.current,
+        end: '+=500%', // 100vh per project
+        pin: true,
         anticipatePin: 1,
+        scrub: true,
         onUpdate: (self) => {
           const raw     = self.progress * (total - 1)
           const current = Math.floor(raw)
@@ -102,13 +103,21 @@ export default function Projects() {
           cardsRef.current.forEach((card, i) => {
             if (!card) return
             if (i < current) {
-              gsap.set(card, { x: '-100%', opacity: 0 })
+              card.style.transform = `translateX(-100%)`
+              card.style.opacity = 0
+              card.style.visibility = 'hidden'
             } else if (i === current) {
-              gsap.set(card, { x: `${-between * 100}%`, opacity: 1 })
+              card.style.transform = `translateX(${-between * 100}%)`
+              card.style.opacity = 1 - between
+              card.style.visibility = 'visible'
             } else if (i === next) {
-              gsap.set(card, { x: `${(1 - between) * 100}%`, opacity: between > 0 ? 1 : 0 })
+              card.style.transform = `translateX(${(1 - between) * 100}%)`
+              card.style.opacity = between
+              card.style.visibility = 'visible'
             } else {
-              gsap.set(card, { x: '100%', opacity: 0 })
+              card.style.transform = `translateX(100%)`
+              card.style.opacity = 0
+              card.style.visibility = 'hidden'
             }
           })
 
@@ -128,7 +137,10 @@ export default function Projects() {
   }, [])
 
   return (
-    <div ref={wrapperRef} id="projects" style={{ height: `${(PROJECTS.length + 1) * 100}vh` }}>
+    <div ref={wrapperRef} id="projects" style={{ 
+      position: 'relative', width: '100%', minHeight: '100vh', 
+      background: 'var(--bg)', overflow: 'visible' 
+    }}>
       <div ref={stickyRef} style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
 
         {/* Section label */}
@@ -136,7 +148,7 @@ export default function Projects() {
           position: 'absolute', top: 32, left: 'clamp(2rem,6vw,6rem)',
           display: 'flex', alignItems: 'center', gap: 16, zIndex: 10,
         }}>
-          <span className="section-label">04 · Projects</span>
+          <span className="section-label">06 · Projects</span>
           <div style={{ width: 40, height: 1, background: 'var(--surface)' }} />
         </div>
 
@@ -168,7 +180,7 @@ export default function Projects() {
 }
 
 const ProjectCard = forwardRef(({ project: p }, ref) => (
-  <div ref={ref} style={{
+  <div ref={ref} data-cursor-text="VIEW" style={{
     position: 'absolute', inset: 0,
     display: 'flex', alignItems: 'center',
     padding: '0 clamp(2rem,6vw,6rem)',

@@ -80,16 +80,35 @@ export default function Hero({ onVideoReady }) {
         onUpdate: (self) => {
           const p = self.progress
           if (overlayRef.current) overlayRef.current.style.opacity = String(0.45 + p * 0.3)
-          
+
           const target = isMobile ? videoRef.current : canvasRef.current
-          if (target) gsap.set(target, { scale: 1 + p * 0.08 })
-          
+          if (target) {
+            // RADIAL COLLAPSE LOGIC
+            // 0 -> 0.7: Subtle scale up (1.0 -> 1.08)
+            // 0.7 -> 1.0: Rapid shrink to 0 (Collapse)
+            let scale = 1;
+            if (p < 0.7) {
+              scale = 1 + (p / 0.7) * 0.08;
+            } else {
+              const collapseProgress = (p - 0.7) / 0.3;
+              scale = 1.08 * (1 - collapseProgress);
+            }
+            gsap.set(target, { scale: scale });
+          }
+
+          // Fade out content as we collapse
+          const contentOpacity = p > 0.8 ? 1 - ((p - 0.8) / 0.2) : 1;
+          gsap.set([titleRef.current, eyebrowRef.current, subRef.current, ctaRef.current], {
+            opacity: contentOpacity
+          });
+
           gsap.set(titleRef.current,   { y: p * -70 })
           gsap.set(eyebrowRef.current, { y: p * -45 })
           gsap.set(subRef.current,     { y: p * -35 })
-          gsap.set(ctaRef.current,     { y: p * -25, opacity: 1 - p * 0.8 })
+          gsap.set(ctaRef.current,     { y: p * -25 })
         },
       })
+
 
       // Canvas Looper
       if (!isMobile && canvasRef.current) {
