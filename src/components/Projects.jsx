@@ -139,7 +139,7 @@ export default function Projects() {
   return (
     <div ref={wrapperRef} id="projects" style={{ 
       position: 'relative', width: '100%', minHeight: '100vh', 
-      background: 'var(--bg)', overflow: 'visible' 
+      background: 'var(--bg)', overflow: 'visible', zIndex: 10
     }}>
       <div ref={stickyRef} style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
 

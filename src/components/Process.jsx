@@ -30,7 +30,7 @@ export default function Process() {
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
-          pin: pinRef.current,
+          pin: true,
           start: "top top",
           end: "+=300%",
           scrub: 1,
