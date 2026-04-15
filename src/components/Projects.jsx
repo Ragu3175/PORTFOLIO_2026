@@ -74,16 +74,17 @@ export default function Projects() {
   const wrapperRef = useRef(null)
   const stickyRef  = useRef(null)
   const cardsRef   = useRef([])
+  const bgNumRef   = useRef(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
 
       const total = PROJECTS.length
 
-      // Initial state: first card visible, rest off-right
+      // Initial state: first card visible, rest clipped out
       cardsRef.current.forEach((card, i) => {
         if (!card) return
-        gsap.set(card, { x: i === 0 ? '0%' : '100%', opacity: i === 0 ? 1 : 0 })
+        gsap.set(card, { clipPath: i === 0 ? 'inset(0% 0% 0% 0%)' : 'inset(0% 100% 0% 0%)', zIndex: total - i })
       })
 
       // Pin + drive carousel
@@ -100,24 +101,36 @@ export default function Projects() {
           const next    = Math.min(current + 1, total - 1)
           const between = raw - current
 
+          // Handle the giant background number scrub with blur
+          if (bgNumRef.current) {
+            // Number changes strictly half way through the transition
+            bgNumRef.current.innerText = PROJECTS[Math.round(raw)].num
+            
+            // Blur peaks right in the middle of a transition
+            const blurAmount = Math.sin(between * Math.PI) * 12; // peaks at 12px blur
+            gsap.set(bgNumRef.current, { 
+              filter: `blur(${blurAmount}px)`,
+              opacity: 0.05 - (Math.sin(between * Math.PI) * 0.02)
+            })
+          }
+
           cardsRef.current.forEach((card, i) => {
             if (!card) return
+            
             if (i < current) {
-              card.style.transform = `translateX(-100%)`
-              card.style.opacity = 0
-              card.style.visibility = 'hidden'
+              // Past cards should be fully wiped out
+              card.style.clipPath = `inset(0% 0% 0% 100%)`
             } else if (i === current) {
-              card.style.transform = `translateX(${-between * 100}%)`
-              card.style.opacity = 1 - between
-              card.style.visibility = 'visible'
+              // Current card wiping out (inset left edge moving to right)
+              // We map between to a percentage: 0 to 1 -> 0% to 100%
+              card.style.clipPath = `inset(0% 0% 0% ${between * 100}%)`
             } else if (i === next) {
-              card.style.transform = `translateX(${(1 - between) * 100}%)`
-              card.style.opacity = between
-              card.style.visibility = 'visible'
+              // Next card wiping in (inset right edge moving to right)
+              // between: 0 to 1 -> 100% to 0%
+              card.style.clipPath = `inset(0% ${(1 - between) * 100}% 0% 0%)`
             } else {
-              card.style.transform = `translateX(100%)`
-              card.style.opacity = 0
-              card.style.visibility = 'hidden'
+              // Future cards clipped out completely to the left (waiting to wipe in)
+              card.style.clipPath = `inset(0% 100% 0% 0%)`
             }
           })
 
@@ -143,6 +156,16 @@ export default function Projects() {
     }}>
       <div ref={stickyRef} style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
 
+        {/* Giant Background Number Scrub */}
+        <div ref={bgNumRef} className="font-display" style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          fontSize: 'clamp(20rem, 45vw, 45rem)', fontWeight: 900,
+          color: '#F0EDE6', opacity: 0.05, pointerEvents: 'none',
+          lineHeight: 1, zIndex: 0, textAlign: 'center', willChange: 'filter, opacity'
+        }}>
+          01
+        </div>
+
         {/* Section label */}
         <div style={{
           position: 'absolute', top: 32, left: 'clamp(2rem,6vw,6rem)',
@@ -166,14 +189,16 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* Cards */}
-        {PROJECTS.map((proj, i) => (
-          <ProjectCard
-            key={i}
-            ref={el => cardsRef.current[i] = el}
-            project={proj}
-          />
-        ))}
+        {/* Cards container */}
+        <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: 2 }}>
+          {PROJECTS.map((proj, i) => (
+            <ProjectCard
+              key={i}
+              ref={el => cardsRef.current[i] = el}
+              project={proj}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -184,7 +209,8 @@ const ProjectCard = forwardRef(({ project: p }, ref) => (
     position: 'absolute', inset: 0,
     display: 'flex', alignItems: 'center',
     padding: '0 clamp(2rem,6vw,6rem)',
-    willChange: 'transform, opacity',
+    willChange: 'clip-path',
+    background: 'var(--bg)', // Needed to fully cover previous layer during wipe
   }}>
     <div style={{
       width: '100%',
@@ -195,13 +221,6 @@ const ProjectCard = forwardRef(({ project: p }, ref) => (
 
       {/* Left: text */}
       <div>
-        <span className="font-display" style={{
-          fontSize: 'clamp(4rem, 10vw, 7rem)', fontWeight: 700,
-          lineHeight: 1, color: p.accent, opacity: 0.12, display: 'block',
-        }}>
-          {p.num}
-        </span>
-
         <h3 className="font-display" style={{
           fontSize: 'clamp(2rem, 4.5vw, 4rem)', fontWeight: 700,
           lineHeight: 1.05, letterSpacing: '-0.02em',

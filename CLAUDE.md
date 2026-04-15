@@ -86,9 +86,9 @@ src/
 ### Scene 03 — About (200vh) [UPGRADED]
 - **Split-screen parallax layout:**
   - Left half: Sticky biographical text column.
-  - Right half: 3 stacked "fact cards" scrolling past.
-    - Card 1: Timeline (KIT $\to$ Certs $\to$ First Project) with SVG line drawing.
-    - Card 2: Philosophy quote — "I don't just write code. I build experiences." (Editorial giant type).
+  - Right1: Timeline (KIT $\to$ Certs $\to$ First Project) with SVG line drawing.
+    - Card 2 half: 3 stacked "fact cards" scrolling past.
+    - Card : Philosophy quote — "I don't just write code. I build experiences." (Editorial giant type).
     - Card 3: Stats — Animated counters (5+ Projects, 7.8 CGPA, 2 Certs, 1 deployed product).
 - **Immersive zoom:** Section number "03" zooms scale: 4 $\to$ 1, opacity: 0.04 $\to$ 0.
 - **Image mask:** Portrait photo revealed via `clip-path: circle(0% → 50%)` like a camera iris.

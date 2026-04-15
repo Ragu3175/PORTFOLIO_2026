@@ -18,7 +18,6 @@ export default function About() {
   const rightColRef = useRef(null);
   const svgPathRef = useRef(null);
   
-  const card0Ref = useRef(null); // Biography Card
   const card1Ref = useRef(null); // Journey Card
   const card2Ref = useRef(null); // Philosophy Card
   const card3Ref = useRef(null); // Metrics Card
@@ -63,7 +62,7 @@ export default function About() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=500%', // Increased for 4 cards
+          end: '+=400%', // 400vh for 3 cards mapping
           pin: true,
           scrub: true,
           anticipatePin: 1
@@ -79,16 +78,8 @@ export default function About() {
       const statsObj = { val: 0 };
       
       // ====== MASTER SCRUB TIMELINE ====== //
-      
-      // Card 0 (Biography) Enters
-      tl.fromTo(card0Ref.current,
-        { opacity: 0, scale: 0.9, y: 80 },
-        { opacity: 1, scale: 1, y: 0, duration: 2, ease: 'power2.out' }
-      )
-      .to({}, { duration: 1.5 }) // Reading pause
-      .to(card0Ref.current, { opacity: 0, y: -80, scale: 0.95, duration: 1.8, ease: 'power2.in' })
 
-      // Card 1 (Journey Log) Enters
+      // Card 1 (Journey Log) Enters (Now first card)
       tl.fromTo(card1Ref.current, 
         { opacity: 0, scale: 0.9, y: 80 }, 
         { opacity: 1, scale: 1, y: 0, duration: 2, ease: 'power2.out' }
@@ -169,16 +160,16 @@ export default function About() {
         position: 'relative', zIndex: 2, alignItems: 'center'
       }}>
         {/* =========================================
-            LEFT COLUMN: Static Portrait Focal Point
+            LEFT COLUMN: Sticky Biographical Section
             ========================================= */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, width: '100%' }}>
             <span className="section-label">03 · About</span>
             <div style={{ width: 80, height: 1, background: 'var(--lime)' }} />
           </div>
 
           <div style={{
-            position: 'relative', width: '100%', maxWidth: '480px', aspectRatio: '1/1',
+            position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1/1',
             borderRadius: '50%', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
           }}>
             <div ref={photoRef} style={{
@@ -190,12 +181,27 @@ export default function About() {
               }} />
             </div>
             <div style={{
-              position: 'absolute', bottom: '15%', width: '100%', textAlign: 'center',
-              fontSize: '0.75rem', color: 'var(--lime)', fontWeight: 700, letterSpacing: '0.3em',
+              position: 'absolute', bottom: '10%', width: '100%', textAlign: 'center',
+              fontSize: '0.65rem', color: 'var(--lime)', fontWeight: 700, letterSpacing: '0.3em',
               zIndex: 10, textShadow: '0 2px 10px rgba(0,0,0,0.5)'
             }}>
-              RAGURAM R / COIMBATORE
+              RAGURAM R / CBE
             </div>
+          </div>
+
+          <div style={{ maxWidth: '440px' }}>
+            <p style={{
+              color: 'var(--cream)', fontSize: 'clamp(1.4rem, 2.5vw, 2.2rem)', lineHeight: 1.25,
+              fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: '1.5rem'
+            }}>
+              Full-stack developer specialising in the MERN stack and high-fidelity interfaces.
+            </p>
+            <p style={{
+              color: 'rgba(240,237,230,0.6)', fontSize: '1.05rem', lineHeight: 1.8,
+              fontFamily: 'DM Sans, sans-serif'
+            }}>
+              I build performant web apps that ship on time, scale when needed, and hold up in production. Focus is on robust architecture wrapped in cinematic UI.
+            </p>
           </div>
         </div>
 
@@ -203,30 +209,6 @@ export default function About() {
             RIGHT COLUMN: Sequenced Absolute Cards
             ========================================= */}
         <div ref={rightColRef} style={{ position: 'relative', minHeight: '650px', width: '100%', perspective: '1200px' }}>
-          
-          {/* Card 0: Biography (Moved from left) */}
-          <div ref={card0Ref} style={{ ...cardStyle }}>
-             <div style={{
-              background: 'rgba(26,26,34,0.4)', padding: '5rem 4rem', borderRadius: '24px',
-              border: '1px solid rgba(232,255,71,0.1)', backdropFilter: 'blur(12px)',
-              boxShadow: '0 40px 80px rgba(0,0,0,0.4)', position: 'relative'
-            }}>
-              <div style={{ width: 40, height: 2, background: 'var(--lime)', marginBottom: '2.5rem' }} />
-              <h3 className="section-label" style={{ marginBottom: '2rem', display: 'block' }}>Biography</h3>
-              <p style={{
-                color: 'var(--cream)', fontSize: 'clamp(1.6rem, 2.8vw, 2.5rem)', lineHeight: 1.25,
-                fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: '2.5rem'
-              }}>
-                Full-stack developer specialising in the MERN stack and high-fidelity interfaces.
-              </p>
-              <p style={{
-                color: 'rgba(240,237,230,0.6)', fontSize: '1.1rem', lineHeight: 1.8,
-                fontFamily: 'DM Sans, sans-serif', maxWidth: '520px'
-              }}>
-                I build performant web apps that ship on time, scale when needed, and hold up in production. My focus is on writing robust architecture wrapped in cinematic, reactive UI.
-              </p>
-            </div>
-          </div>
 
           {/* Card 1: Timeline Log */}
           <div ref={card1Ref} style={{ ...cardStyle }}>
@@ -305,4 +287,3 @@ export default function About() {
     </section>
   );
 }
-

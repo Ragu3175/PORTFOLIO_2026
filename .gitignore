@@ -35,3 +35,7 @@ next-env.d.ts
 *.suo
 *.sln
 *.sw?
+
+# Headless Browser Data
+.chrome-headless/
+.edge-headless/

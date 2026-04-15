@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -16,8 +16,7 @@ export default function Contact() {
   const word1Ref     = useRef(null)
   const word2Ref     = useRef(null)
   const word3Ref     = useRef(null)
-  const emailWrapRef = useRef(null)
-  const emailLineRef = useRef(null)
+  const terminalRef  = useRef(null)
   const linksRef     = useRef([])
   const foldRef      = useRef(null)
 
@@ -25,27 +24,10 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       // Set initial hidden state
       gsap.set([word1Ref.current, word2Ref.current, word3Ref.current], { opacity: 0, y: 70 })
-      gsap.set(emailWrapRef.current, { opacity: 0 })
-      gsap.set(emailLineRef.current, { scaleX: 0, transformOrigin: 'left center' })
+      gsap.set(terminalRef.current, { opacity: 0, y: 20 })
       gsap.set(linksRef.current.filter(Boolean), { opacity: 0, y: 24 })
 
-      // 3D Page Fold Transition
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'bottom bottom',
-        end: 'bottom bottom+=100',
-        scrub: 1,
-        onUpdate: (self) => {
-          const p = self.progress;
-          if (foldRef.current) {
-            gsap.set(foldRef.current, {
-              rotateX: p * -20,
-              transformOrigin: 'bottom center',
-              opacity: 1 - (p * 0.5)
-            });
-          }
-        }
-      });
+      // Removed 3D Page Fold Transition since it's the final section
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -59,8 +41,7 @@ export default function Contact() {
         .to(word1Ref.current, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' })
         .to(word2Ref.current, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }, '-=0.5')
         .to(word3Ref.current, { opacity: 1, y: 0, duration: 0.85, ease: 'back.out(1.6)' }, '-=0.45')
-        .to(emailWrapRef.current, { opacity: 1, duration: 0.5 }, '-=0.2')
-        .to(emailLineRef.current, { scaleX: 1, duration: 0.75, ease: 'power3.inOut' }, '-=0.4')
+        .to(terminalRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.2')
         .to(linksRef.current.filter(Boolean), {
           opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
         }, '-=0.3')
@@ -137,38 +118,13 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Email */}
-        <div ref={emailWrapRef} style={{ marginTop: '4rem', display: 'inline-block', position: 'relative' }}>
-          <a
-            href="mailto:ragu317317@gmail.com"
-            data-mag
-            style={{
-              display: 'block',
-              fontFamily: 'Clash Display, DM Sans, sans-serif',
-              fontWeight: 500,
-              fontSize: 'clamp(1rem, 2.5vw, 2rem)',
-              letterSpacing: '-0.01em',
-              color: 'var(--cream)',
-              textDecoration: 'none',
-              transition: 'color 0.3s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
-          >
-            ragu317317@gmail.com
-          </a>
-          <div
-            ref={emailLineRef}
-            style={{
-              position: 'absolute', bottom: -4, left: 0,
-              width: '100%', height: 1,
-              background: 'var(--lime)',
-            }}
-          />
+        {/* Full-bleed Terminal Block */}
+        <div ref={terminalRef} style={{ marginTop: '3rem', position: 'relative' }}>
+          <TerminalBlock />
         </div>
 
         {/* Links row */}
-        <div style={{ marginTop: '5rem', display: 'flex', flexWrap: 'wrap', gap: '3rem 4rem' }}>
+        <div style={{ marginTop: '4rem', display: 'flex', flexWrap: 'wrap', gap: '2rem 4rem' }}>
           {LINKS.map((link, i) => (
             <a
               key={i}
@@ -205,14 +161,14 @@ export default function Contact() {
 
         {/* Footer bar */}
         <div style={{
-          marginTop: '8rem', paddingTop: '2rem',
+          marginTop: '6rem', paddingTop: '2rem',
           borderTop: '1px solid var(--surface)',
           display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
         }}>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.45)', fontFamily: 'DM Sans, sans-serif' }}>
             Raguram R · Full Stack Developer · 2025
           </span>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.18)', fontFamily: 'DM Sans, sans-serif' }}>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.45)', fontFamily: 'DM Sans, sans-serif' }}>
             Built with React + GSAP + Lenis
           </span>
         </div>
@@ -225,6 +181,137 @@ export default function Contact() {
           filter: 'blur(80px)', pointerEvents: 'none',
         }} />
       </div>
+      
+      {/* Blinking cursor keyframes */}
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+      `}</style>
     </section>
+  )
+}
+
+function TerminalBlock() {
+  const [typedLines, setTypedLines] = useState([])
+  const containerRef = useRef(null)
+
+  const terminalLines = [
+    "initializing contact protocol...",
+    "target: ragu317317@gmail.com",
+    "status: OPEN TO WORK...",
+    "location: Bengaluru / Chennai / Hyderabad",
+    "availability: IMMEDIATE"
+  ]
+
+  useEffect(() => {
+    let timeouts = []
+    
+    ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: 'top 85%',
+      onEnter: () => {
+        let currentLineIdx = 0;
+        let currentCharIdx = 0;
+        let currentText = [""];
+
+        const typeChar = () => {
+          if (currentLineIdx >= terminalLines.length) return;
+          
+          const targetLine = terminalLines[currentLineIdx];
+          
+          if (currentCharIdx < targetLine.length) {
+            currentText[currentLineIdx] = targetLine.substring(0, currentCharIdx + 1);
+            setTypedLines([...currentText]);
+            currentCharIdx++;
+            // Fast typing speed (5ms - 15ms)
+            timeouts.push(setTimeout(typeChar, Math.random() * 10 + 5)); 
+          } else {
+            // Line finished, wait a bit then start next line
+            currentLineIdx++;
+            currentCharIdx = 0;
+            if (currentLineIdx < terminalLines.length) {
+              currentText.push("");
+              setTypedLines([...currentText]);
+              timeouts.push(setTimeout(typeChar, 100));
+            }
+          }
+        };
+
+        timeouts.push(setTimeout(typeChar, 200));
+      },
+      once: true
+    })
+
+    return () => timeouts.forEach(t => clearTimeout(t))
+  }, [])
+
+  return (
+    <div ref={containerRef} style={{
+      width: '100%',
+      backgroundColor: 'rgba(20, 20, 25, 0.6)',
+      border: '1px solid #3A3A3A',
+      borderRadius: '8px',
+      padding: '2rem',
+      fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+      fontSize: 'clamp(0.85rem, 1.5vw, 1.1rem)',
+      color: 'rgba(240,237,230,0.6)',
+      lineHeight: 1.8,
+      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)',
+      backdropFilter: 'blur(10px)',
+      minHeight: '260px'
+    }}>
+      {/* Mac OS dot controls */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
+        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ff5f56' }} />
+        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ffbd2e' }} />
+        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#27c93f' }} />
+      </div>
+
+      <div>
+        {typedLines.map((line, idx) => {
+          const isCompleteLine = idx < typedLines.length - 1 || line.length === terminalLines[idx].length;
+          const fullLineText = terminalLines[idx];
+          
+          return (
+            <div key={idx} style={{
+              color: fullLineText.includes('target:') || fullLineText.includes('status:') ? 'var(--lime)' : 'inherit',
+              fontWeight: fullLineText.includes('target:') || fullLineText.includes('status:') ? 600 : 400
+            }}>
+              <span style={{ color: '#00ff88', marginRight: '10px' }}>&gt;</span>
+              {line}
+              {/* Show blinking cursor only on the very last line being typed */}
+              {idx === typedLines.length - 1 && (
+                <div style={{ 
+                  display: 'inline-block',
+                  width: '10px', 
+                  height: '1.2em', 
+                  backgroundColor: 'var(--lime)', 
+                  verticalAlign: 'bottom',
+                  marginLeft: '4px',
+                  animation: 'blink 1s step-end infinite'
+                }} />
+              )}
+            </div>
+          )
+        })}
+        {/* Fallback cursor if typing hasn't started */}
+        {typedLines.length === 0 && (
+          <div>
+            <span style={{ color: '#00ff88', marginRight: '10px' }}>&gt;</span>
+            <div style={{ 
+              display: 'inline-block',
+              width: '10px', 
+              height: '1.2em', 
+              backgroundColor: 'var(--lime)', 
+              verticalAlign: 'bottom',
+              marginLeft: '4px',
+              animation: 'blink 1s step-end infinite'
+            }} />
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
