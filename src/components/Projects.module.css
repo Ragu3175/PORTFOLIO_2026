@@ -1,0 +1,180 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  overflow: visible;
+  z-index: 10;
+}
+
+.sticky {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bgNumber {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(20rem, 45vw, 45rem);
+  font-weight: 900;
+  color: #f0ede6;
+  opacity: 0.05;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 0;
+  text-align: center;
+  will-change: filter, opacity;
+}
+
+.sectionLabel {
+  position: absolute;
+  top: 32px;
+  left: clamp(2rem, 6vw, 6rem);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.labelLine {
+  width: 40px;
+  height: 1px;
+  background: var(--surface);
+}
+
+.dotsContainer {
+  position: absolute;
+  top: 36px;
+  right: clamp(2rem, 4vw, 4rem);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.cardsContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Project Card Styles */
+.card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(2rem, 6vw, 6rem);
+  will-change: clip-path;
+  background: var(--bg);
+}
+
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 4rem;
+  align-items: center;
+}
+
+.title {
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-top: 0.5rem;
+}
+
+.desc {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: rgba(240, 237, 230, 0.52);
+  max-width: 46ch;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.stackContainer {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stackItem {
+  font-size: 0.68rem;
+  padding: 6px 14px;
+  font-family: 'Clash Display', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.linkContainer {
+  margin-top: 2.5rem;
+}
+
+.githubLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: 'Clash Display', sans-serif;
+  color: rgba(240, 237, 230, 0.45);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.githubLink:hover {
+  color: var(--lime);
+}
+
+.visualContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.visualWrapper {
+  position: relative;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  filter: blur(60px);
+  border-radius: 50%;
+  transform: scale(0.8);
+}
+
+.svgIcon {
+  position: relative;
+  z-index: 1;
+}
+
+.cornerBorder {
+  position: absolute;
+  inset: -16px;
+}
+
+.bottomLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+}

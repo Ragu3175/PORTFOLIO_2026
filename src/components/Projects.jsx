@@ -1,6 +1,7 @@
 import { useEffect, useRef, forwardRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import styles from './Projects.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -150,47 +151,31 @@ export default function Projects() {
   }, [])
 
   return (
-    <div ref={wrapperRef} id="projects" style={{ 
-      position: 'relative', width: '100%', minHeight: '100vh', 
-      background: 'var(--bg)', overflow: 'visible', zIndex: 10
-    }}>
-      <div ref={stickyRef} style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
+    <div ref={wrapperRef} id="projects" className={styles.wrapper}>
+      <div ref={stickyRef} className={styles.sticky}>
 
         {/* Giant Background Number Scrub */}
-        <div ref={bgNumRef} className="font-display" style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          fontSize: 'clamp(20rem, 45vw, 45rem)', fontWeight: 900,
-          color: '#F0EDE6', opacity: 0.05, pointerEvents: 'none',
-          lineHeight: 1, zIndex: 0, textAlign: 'center', willChange: 'filter, opacity'
-        }}>
+        <div ref={bgNumRef} className={`${styles.bgNumber} font-display`}>
           01
         </div>
 
         {/* Section label */}
-        <div style={{
-          position: 'absolute', top: 32, left: 'clamp(2rem,6vw,6rem)',
-          display: 'flex', alignItems: 'center', gap: 16, zIndex: 10,
-        }}>
+        <div className={styles.sectionLabel}>
           <span className="section-label">06 · Projects</span>
-          <div style={{ width: 40, height: 1, background: 'var(--surface)' }} />
+          <div className={styles.labelLine} />
         </div>
 
         {/* Progress dots */}
-        <div style={{
-          position: 'absolute', top: 36, right: 'clamp(2rem,4vw,4rem)',
-          display: 'flex', gap: 8, zIndex: 10,
-        }}>
+        <div className={styles.dotsContainer}>
           {PROJECTS.map((_, i) => (
-            <div key={i} className="proj-dot" style={{
-              width: 6, height: 6, borderRadius: '50%',
+            <div key={i} className={`${styles.dot} proj-dot`} style={{
               background: i === 0 ? 'var(--cream)' : 'var(--surface)',
-              transition: 'background 0.3s, transform 0.3s',
             }} />
           ))}
         </div>
 
         {/* Cards container */}
-        <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: 2 }}>
+        <div className={styles.cardsContainer}>
           {PROJECTS.map((proj, i) => (
             <ProjectCard
               key={i}
@@ -205,97 +190,58 @@ export default function Projects() {
 }
 
 const ProjectCard = forwardRef(({ project: p }, ref) => (
-  <div ref={ref} data-cursor-text="VIEW" style={{
-    position: 'absolute', inset: 0,
-    display: 'flex', alignItems: 'center',
-    padding: '0 clamp(2rem,6vw,6rem)',
-    willChange: 'clip-path',
-    background: 'var(--bg)', // Needed to fully cover previous layer during wipe
-  }}>
-    <div style={{
-      width: '100%',
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-      gap: '4rem', alignItems: 'center',
-    }}>
+  <div ref={ref} data-cursor-text="VIEW" className={styles.card}>
+    <div className={styles.grid}>
 
       {/* Left: text */}
       <div>
-        <h3 className="font-display" style={{
-          fontSize: 'clamp(2rem, 4.5vw, 4rem)', fontWeight: 700,
-          lineHeight: 1.05, letterSpacing: '-0.02em',
-          color: 'var(--cream)', marginTop: '0.5rem',
-        }}>
+        <h3 className={`${styles.title} font-display`}>
           {p.name}
         </h3>
 
-        <p style={{
-          marginTop: '1.25rem', fontSize: '0.95rem', lineHeight: 1.75,
-          color: 'rgba(240,237,230,0.52)', maxWidth: '46ch',
-          fontFamily: 'DM Sans, sans-serif',
-        }}>
+        <p className={styles.desc}>
           {p.desc}
         </p>
 
         {/* Stack */}
-        <div style={{ marginTop: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        <div className={styles.stackContainer}>
           {p.stack.map(s => (
-            <span key={s} style={{
-              fontSize: '0.68rem', padding: '6px 14px',
+            <span key={s} className={styles.stackItem} style={{
               border: `1px solid ${p.accent}33`,
               color: p.accent,
               background: `${p.accent}0d`,
-              fontFamily: 'Clash Display, sans-serif',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
             }}>{s}</span>
           ))}
         </div>
 
         {/* Link */}
-        <div style={{ marginTop: '2.5rem' }}>
-          <a href={p.github} target="_blank" rel="noreferrer" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: '0.72rem', letterSpacing: '0.18em', textTransform: 'uppercase',
-            fontFamily: 'Clash Display, sans-serif',
-            color: 'rgba(240,237,230,0.45)', textDecoration: 'none',
-            transition: 'color 0.3s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(240,237,230,0.45)'}
-          >
+        <div className={styles.linkContainer}>
+          <a href={p.github} target="_blank" rel="noreferrer" className={styles.githubLink}>
             GitHub ↗
           </a>
         </div>
       </div>
 
       {/* Right: SVG illustration */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ position: 'relative' }}>
+      <div className={styles.visualContainer}>
+        <div className={styles.visualWrapper}>
           {/* Glow */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: p.accent, opacity: 0.12,
-            filter: 'blur(60px)', borderRadius: '50%',
-            transform: 'scale(0.8)',
-          }} />
+          <div className={styles.glow} style={{ background: p.accent }} />
           <svg
             viewBox="0 0 160 160"
             width="240" height="240"
-            style={{ color: p.accent, position: 'relative', zIndex: 1 }}
+            className={styles.svgIcon}
+            style={{ color: p.accent }}
             dangerouslySetInnerHTML={{ __html: p.svgPath }}
           />
           {/* Corner border */}
-          <div style={{
-            position: 'absolute', inset: -16,
-            border: `1px solid ${p.accent}1a`,
-          }} />
+          <div className={styles.cornerBorder} style={{ border: `1px solid ${p.accent}1a` }} />
         </div>
       </div>
     </div>
 
     {/* Bottom accent line */}
-    <div style={{
-      position: 'absolute', bottom: 0, left: 0, right: 0, height: 1,
+    <div className={styles.bottomLine} style={{
       background: `linear-gradient(to right, transparent, ${p.accent}33, transparent)`,
     }} />
   </div>

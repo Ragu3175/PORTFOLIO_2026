@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, forwardRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import styles from './Process.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -68,7 +69,6 @@ export default function Process() {
             const active = Math.min(total - 1, Math.round(Math.abs(x) / windowWidth))
             setActiveIdx(active)
 
-            // Dynamic background shift for depth
             gsap.to(containerRef.current, {
               backgroundColor: active > 0 ? '#050508' : '#0A0A0F',
               duration: 0.6
@@ -77,7 +77,6 @@ export default function Process() {
         }
       });
 
-      // 1. Entry Shield Dissolve
       tl.to(entryShieldRef.current, {
         opacity: 0,
         y: -30,
@@ -85,15 +84,12 @@ export default function Process() {
         ease: 'power3.inOut'
       });
 
-      // 2. Initial Revelation
       tl.fromTo(trackRef.current, 
         { autoAlpha: 0, scale: 0.98 }, 
         { autoAlpha: 1, scale: 1, duration: 1.2, ease: 'power2.out' },
         '0.1'
       );
 
-      // 3. Horizontal Scroll & Neural Wire Growth
-      // The line grows at the exact same time the cards move
       tl.to(trackRef.current, {
         x: () => -(windowWidth * (total - 1)),
         ease: "none",
@@ -111,44 +107,24 @@ export default function Process() {
   }, [])
 
   return (
-    <section ref={containerRef} id="process" style={{ position: 'relative', width: '100%', minHeight: '100vh', background: '#0A0A0F', overflow: 'hidden' }}>
+    <section ref={containerRef} id="process" className={styles.container}>
       
-      {/* Entry Shield (Prevents transition mismatch) */}
-      <div 
-        ref={entryShieldRef}
-        style={{
-          position: 'absolute', inset: 0, background: '#0A0A0F', zIndex: 1000, pointerEvents: 'none',
-          display: 'flex', alignItems: 'center', justifyContent: 'center'
-        }}
-      >
-        <div style={{ width: '40px', height: '1px', background: '#E8FF47', boxShadow: '0 0 15px #E8FF47' }} />
+      <div ref={entryShieldRef} className={styles.entryShield}>
+        <div className={styles.shieldLine} />
       </div>
 
-      {/* Background Neural Grid */}
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'radial-gradient(circle, #F0EDE6 1px, transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+      <div className={styles.neuralGrid} />
 
-      {/* Floating Section Label */}
-      <div style={{ position: 'absolute', top: '4rem', left: 'clamp(2rem,6vw,6rem)', display: 'flex', alignItems: 'center', gap: 16, zIndex: 10 }}>
-        <span className="section-label" style={{ color: 'rgba(240,237,230,0.6)', fontWeight: 600, letterSpacing: '0.1em' }}>05 · Methodology</span>
-        <div style={{ width: 40, height: 1, background: 'rgba(240,237,230,0.2)' }} />
+      <div className={styles.sectionLabel}>
+        <span className={styles.labelCircle}>05 · Methodology</span>
+        <div className={styles.labelLine} />
       </div>
 
-      <div ref={trackRef} style={{ 
-        position: 'relative', display: 'flex', height: '100vh', width: `${PHASES.length * 100}vw`, willChange: 'transform' 
-      }}>
+      <div ref={trackRef} className={styles.track} style={{ width: `${PHASES.length * 100}vw` }}>
         
-        {/* The Connection Line (Neural Wire) - Pure Background Layer */}
-        <div style={{ 
-          position: 'absolute', top: '50%', left: '50vw', width: `${(PHASES.length - 1) * 100}vw`, 
-          height: 1, background: 'rgba(255,255,255,0.02)', zIndex: 0 
-        }} />
+        <div className={styles.connectionLineBg} style={{ width: `${(PHASES.length - 1) * 100}vw` }} />
         
-        <svg style={{ 
-          position: 'absolute', top: 'calc(50% - 2px)', left: '50vw', width: `${(PHASES.length - 1) * 100}vw`, 
-          height: '4px', zIndex: 0, pointerEvents: 'none', overflow: 'visible',
-          maskImage: 'linear-gradient(to right, transparent, black 150px)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 150px)'
-        }}>
+        <svg className={styles.svgContainer} style={{ width: `${(PHASES.length - 1) * 100}vw` }}>
            <line 
             id="neural-wire-line"
             ref={svgLineRef} 
@@ -158,14 +134,12 @@ export default function Process() {
             strokeDasharray="2000" 
             strokeDashoffset="2000"
             strokeLinecap="round" 
-            style={{ transition: 'stroke 0.8s ease', filter: 'drop-shadow(0 0 12px currentColor)' }}
+            className={styles.neuralWireLine}
            />
         </svg>
 
         {PHASES.map((phase, i) => (
-          <div key={i} style={{ 
-            width: '100vw', height: '100vh', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 10
-          }}>
+          <div key={i} className={styles.cardWrapper}>
             <BentoProcessCard 
               phase={phase} 
               isActive={activeIdx === i} 
@@ -199,69 +173,41 @@ function BentoProcessCard({ phase, isActive }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      className={styles.card}
       style={{
-        width: '90%',
-        maxWidth: '1000px',
-        height: '60vh',
         background: isActive ? '#07070A' : 'rgba(255, 255, 255, 0.02)',
         backdropFilter: isActive ? 'blur(40px)' : 'blur(5px)',
         border: `1px solid ${isActive ? phase.accent + '80' : 'rgba(255, 255, 255, 0.05)'}`,
-        borderRadius: '32px',
-        padding: '3.5rem',
-        display: 'grid',
-        gridTemplateColumns: 'minmax(300px, 1fr) 1.2fr',
-        gap: '4rem',
-        transition: 'all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)',
         transform: `scale(${isActive ? 1 : 0.85})`,
         opacity: isActive ? 1 : 0.1,
-        position: 'relative',
         boxShadow: isActive ? `0 0 70px ${phase.accent}15` : 'none',
-        overflow: 'hidden',
-        perspective: '1200px',
-        willChange: 'transform, opacity, filter'
       }}
     >
-      {/* Decorative Corner Trace */}
-      <div style={{ position: 'absolute', top: 0, right: 0, width: 80, height: 80, borderTop: `2px solid ${phase.accent}`, borderRight: `2px solid ${phase.accent}`, opacity: isActive ? 0.6 : 0, transition: '0.8s', borderRadius: '0 32px 0 0' }} />
+      <div className={styles.cardCorner} style={{ borderTop: `2px solid ${phase.accent}`, borderRight: `2px solid ${phase.accent}`, opacity: isActive ? 0.6 : 0 }} />
 
-      {/* Left: Identity */}
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <span style={{ 
+      <div className={styles.leftContent}>
+        <span className={styles.stepNum} style={{ 
           color: phase.accent, 
-          fontSize: '0.9rem', 
-          fontWeight: 800, 
-          letterSpacing: '0.3em',
           opacity: isActive ? 1 : 0,
           transform: `translateY(${isActive ? 0 : 20}px)`,
-          transition: '0.6s 0.2s'
         }}>
           STEP {phase.num}
         </span>
-        <h3 style={{ 
-          fontSize: 'clamp(3rem, 6vw, 4.5rem)', 
-          margin: '1.5rem 0', 
-          color: '#F0EDE6', 
-          fontWeight: 900,
-          lineHeight: 1,
+        <h3 className={styles.title} style={{ 
           opacity: isActive ? 1 : 0.5,
           filter: isActive ? 'none' : 'blur(3px)',
-          transition: '0.6s'
         }}>
           {phase.title}
         </h3>
         
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', flexWrap: 'wrap' }}>
+        <div className={styles.tagsContainer}>
           {phase.tags.map((tag, i) => (
-            <span key={tag} style={{ 
-              padding: '0.6rem 1.4rem', 
+            <span key={tag} className={styles.tag} style={{ 
               border: `1px solid ${phase.accent}33`, 
-              borderRadius: '100px', 
-              fontSize: '0.8rem', 
-              color: '#F0EDE6',
               background: isActive ? `${phase.accent}08` : 'transparent',
               opacity: isActive ? 1 : 0,
               transform: `translateY(${isActive ? 0 : 20}px)`,
-              transition: `all 0.6s ${0.3 + i * 0.1}s`
+              transitionDelay: `${0.3 + i * 0.1}s`
             }}>
               {tag}
             </span>
@@ -269,35 +215,24 @@ function BentoProcessCard({ phase, isActive }) {
         </div>
       </div>
 
-      {/* Right: Narrative & Logic */}
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        justifyContent: 'center',
+      <div className={styles.rightContent} style={{ 
         opacity: isActive ? 1 : 0,
         transform: `translateX(${isActive ? 0 : 40}px)`,
-        transition: '0.9s 0.4s'
       }}>
-        <p style={{ color: '#F0EDE6', opacity: 0.85, fontSize: '1.25rem', lineHeight: 1.7, marginBottom: '2.5rem', fontWeight: 400 }}>
+        <p className={styles.desc}>
           {phase.desc}
         </p>
 
-        {/* Logic Visualization Layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', height: '180px' }}>
-          <div style={{ 
+        <div className={styles.logicGrid}>
+          <div className={styles.logicVisual} style={{ 
             background: isActive ? `${phase.accent}08` : 'rgba(255,255,255,0.01)', 
             border: `1px solid ${isActive ? phase.accent + '20' : 'rgba(255,255,255,0.03)'}`, 
-            borderRadius: '20px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            transition: '0.8s'
           }}>
-             <div style={{ width: '40px', height: '2px', background: phase.accent, boxShadow: `0 0 20px ${phase.accent}` }} />
+             <div className={styles.pulseLine} style={{ background: phase.accent, boxShadow: `0 0 20px ${phase.accent}` }} />
           </div>
-          <div style={{ display: 'grid', gap: '1.5rem' }}>
-             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }} />
-             <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }} />
+          <div className={styles.logicSubGrid}>
+             <div className={styles.subGridItem} />
+             <div className={styles.subGridItem} />
           </div>
         </div>
       </div>

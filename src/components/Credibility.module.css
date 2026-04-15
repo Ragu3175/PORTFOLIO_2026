@@ -1,0 +1,67 @@
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 120vh;
+  padding: 10rem clamp(2rem, 6vw, 6rem);
+  perspective: 1500px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6rem;
+}
+
+.labelLine {
+  width: 40px;
+  height: 1px;
+  background: var(--surface);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  border: 1px solid rgba(232, 255, 71, 0.1);
+  border-radius: 16px;
+  padding: 4rem 3rem;
+  position: relative;
+  transform-style: preserve-3d;
+  box-shadow: inset 0 0 20px rgba(232, 255, 71, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.cardGradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: radial-gradient(
+    circle at top left,
+    rgba(232, 255, 71, 0.1),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--cream);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.desc {
+  font-family: "DM Sans", sans-serif;
+  color: rgba(240, 237, 230, 0.6);
+  line-height: 1.6;
+}

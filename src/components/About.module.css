@@ -1,0 +1,270 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--cream);
+  padding: 0 clamp(1.5rem, 6vw, 6rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zoomNumber {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(25rem, 50vw, 50rem);
+  font-weight: 900;
+  color: var(--surface);
+  z-index: 0;
+  pointer-events: none;
+  font-family: var(--font-display);
+  line-height: 0.8;
+  transform-origin: center center;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+  gap: 12rem; /* Matches the 6rem gap if needed, but increased for clarity in bento */
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+/* Left Column Styles */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.labelLine {
+  width: 80px;
+  height: 1px;
+  background: var(--lime);
+}
+
+.photoWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+}
+
+.photoFilter {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+}
+
+.photoOverlayText {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--lime);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  z-index: 10;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.bioTextWrapper {
+  maxWidth: 440px;
+}
+
+.headline {
+  color: var(--cream);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  line-height: 1.25;
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.subtext {
+  color: rgba(240, 237, 230, 0.6);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Right Column Styles */
+.rightCol {
+  position: relative;
+  min-height: 650px;
+  width: 100%;
+  perspective: 1200px;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.bentoContent {
+  background: rgba(26, 26, 34, 0.4);
+  padding: 5rem 4rem;
+  border-radius: 24px;
+  border: 1px solid rgba(232, 255, 71, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.bentoTitle {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 3rem;
+  color: var(--lime);
+}
+
+/* Timeline Styles */
+.timelineWrapper {
+  position: relative;
+  padding-left: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.timelinePath {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.timelineItem {
+  position: relative;
+}
+
+.timelineDot {
+  position: absolute;
+  left: -3.8rem;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--lime);
+  box-shadow: 0 0 15px rgba(232, 255, 71, 0.4);
+}
+
+.yearText {
+  font-size: 0.85rem;
+  color: var(--lime);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.itemTitle {
+  font-size: 1.3rem;
+  font-family: var(--font-display);
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+
+.itemDesc {
+  font-size: 0.95rem;
+  color: rgba(240, 237, 230, 0.5);
+  line-height: 1.6;
+}
+
+/* Philosophy Card Styles */
+.philosophyContent {
+  background: linear-gradient(135deg, rgba(232, 255, 71, 0.1) 0%, rgba(10, 10, 15, 0.9) 100%);
+  padding: 7rem 5rem;
+  border-radius: 24px;
+  border: 1px solid rgba(232, 255, 71, 0.2);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.quoteMark {
+  position: absolute;
+  top: -30px;
+  left: -20px;
+  font-size: 18rem;
+  color: rgba(232, 255, 71, 0.06);
+  font-family: var(--font-display);
+  line-height: 0.7;
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 3.5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  position: relative;
+  z-index: 2;
+}
+
+/* Metrics Card Styles */
+.metricsContent {
+  background: rgba(26, 26, 34, 0.4);
+  padding: 5rem 4rem;
+  border-radius: 24px;
+  border: 1px solid var(--surface);
+  backdrop-filter: blur(12px);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.metricValue {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 5vw, 5.5rem);
+  font-weight: 700;
+  color: var(--cream);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.metricSuffix {
+  color: var(--lime);
+  font-size: 0.7em;
+}
+
+.metricLabel {
+  font-size: 0.8rem;
+  color: rgba(240, 237, 230, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}

@@ -1,0 +1,211 @@
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #0a0a0f;
+  overflow: hidden;
+}
+
+.entryShield {
+  position: absolute;
+  inset: 0;
+  background: #0a0a0f;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shieldLine {
+  width: 40px;
+  height: 1px;
+  background: #e8ff47;
+  box-shadow: 0 0 15px #e8ff47;
+}
+
+.neuralGrid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: radial-gradient(circle, #f0ede6 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.sectionLabel {
+  position: absolute;
+  top: 4rem;
+  left: clamp(2rem, 6vw, 6rem);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+
+.labelCircle {
+  color: rgba(240, 237, 230, 0.6);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.labelLine {
+  width: 40px;
+  height: 1px;
+  background: rgba(240, 237, 230, 0.2);
+}
+
+.track {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  will-change: transform;
+}
+
+.connectionLineBg {
+  position: absolute;
+  top: 50%;
+  left: 50vw;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.02);
+  z-index: 0;
+}
+
+.svgContainer {
+  position: absolute;
+  top: calc(50% - 2px);
+  left: 50vw;
+  height: 4px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+  mask-image: linear-gradient(to right, transparent, black 150px);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 150px);
+}
+
+.neuralWireLine {
+  transition: stroke 0.8s ease;
+  filter: drop-shadow(0 0 12px currentColor);
+}
+
+.cardWrapper {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Bento Card Styles */
+.card {
+  width: 90%;
+  max-width: 1000px;
+  height: 60vh;
+  border-radius: 32px;
+  padding: 3.5rem;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) 1.2fr;
+  gap: 4rem;
+  position: relative;
+  overflow: hidden;
+  perspective: 1200px;
+  will-change: transform, opacity, filter;
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cardCorner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 0 32px 0 0;
+  transition: 0.8s;
+}
+
+.leftContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stepNum {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  transition: 0.6s 0.2s;
+}
+
+.title {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  margin: 1.5rem 0;
+  color: #f0ede6;
+  font-weight: 900;
+  line-height: 1;
+  transition: 0.6s;
+}
+
+.tagsContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 0.6rem 1.4rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: #f0ede6;
+  transition: all 0.6s;
+}
+
+.rightContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: 0.9s 0.4s;
+}
+
+.desc {
+  color: #f0ede6;
+  opacity: 0.85;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+.logicGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  height: 180px;
+}
+
+.logicVisual {
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pulseLine {
+  width: 40px;
+  height: 2px;
+}
+
+.logicSubGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.subGridItem {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}

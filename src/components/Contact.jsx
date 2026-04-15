@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import styles from './Contact.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,12 +23,9 @@ export default function Contact() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Set initial hidden state
       gsap.set([word1Ref.current, word2Ref.current, word3Ref.current], { opacity: 0, y: 70 })
       gsap.set(terminalRef.current, { opacity: 0, y: 20 })
       gsap.set(linksRef.current.filter(Boolean), { opacity: 0, y: 24 })
-
-      // Removed 3D Page Fold Transition since it's the final section
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -48,7 +46,6 @@ export default function Contact() {
 
     }, sectionRef)
 
-    // Magnetic effect
     const els = sectionRef.current.querySelectorAll('[data-mag]')
     const cleanups = []
     els.forEach(el => {
@@ -74,57 +71,30 @@ export default function Contact() {
   }, [])
 
   return (
-    <section
-      ref={sectionRef}
-      id="contact"
-      style={{
-        position: 'relative',
-        width: '100%',
-        minHeight: '100vh',
-        padding: '8rem clamp(2rem,6vw,6rem) 5rem',
-        overflow: 'hidden',
-        background: '#0A0A0F',
-        perspective: '1500px'
-      }}
-    >
-      {/* The Page Fold Wrapper */}
-      <div ref={foldRef} style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        willChange: 'transform'
-      }}>
-        {/* Section label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: '5rem' }}>
+    <section ref={sectionRef} id="contact" className={styles.container}>
+      <div ref={foldRef} className={styles.foldWrapper}>
+        <div className={styles.header}>
           <span className="section-label">08 · Contact</span>
-          <div style={{ width: 60, height: 1, background: 'var(--surface)' }} />
+          <div className={styles.labelLine} />
         </div>
 
-        {/* Headline */}
-        <div className="font-display" style={{
-          fontSize: 'clamp(3.5rem, 10vw, 10rem)',
-          fontWeight: 700,
-          lineHeight: 0.92,
-          letterSpacing: '-0.03em',
-        }}>
-          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-            <span ref={word1Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>LET'S</span>
+        <div className={`font-display ${styles.headline}`}>
+          <div className={styles.wordContainer}>
+            <span ref={word1Ref} className={`${styles.word} ${styles.cream}`}>LET'S</span>
           </div>
-          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-            <span ref={word2Ref} style={{ display: 'inline-block', color: 'var(--cream)' }}>BUILD</span>
+          <div className={styles.wordContainer}>
+            <span ref={word2Ref} className={`${styles.word} ${styles.cream}`}>BUILD</span>
           </div>
-          <div style={{ overflow: 'hidden', paddingBottom: '0.05em' }}>
-            <span ref={word3Ref} style={{ display: 'inline-block', color: 'var(--lime)' }}>SOMETHING.</span>
+          <div className={styles.wordContainer}>
+            <span ref={word3Ref} className={`${styles.word} ${styles.lime}`}>SOMETHING.</span>
           </div>
         </div>
 
-        {/* Full-bleed Terminal Block */}
-        <div ref={terminalRef} style={{ marginTop: '3rem', position: 'relative' }}>
+        <div ref={terminalRef} className={styles.terminalWrapper}>
           <TerminalBlock />
         </div>
 
-        {/* Links row */}
-        <div style={{ marginTop: '4rem', display: 'flex', flexWrap: 'wrap', gap: '2rem 4rem' }}>
+        <div className={styles.linksContainer}>
           {LINKS.map((link, i) => (
             <a
               key={i}
@@ -134,61 +104,29 @@ export default function Contact() {
               rel="noreferrer"
               download={link.download || undefined}
               data-mag
-              style={{
-                display: 'flex', flexDirection: 'column', gap: 6,
-                textDecoration: 'none',
-                color: 'var(--cream)',
-                transition: 'color 0.3s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--lime)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--cream)'}
+              className={styles.link}
             >
-              <span style={{
-                fontFamily: 'Clash Display, DM Sans, sans-serif',
-                fontWeight: 600, fontSize: '1.05rem', letterSpacing: '0.03em',
-              }}>
+              <span className={styles.linkLabel}>
                 {link.label}
               </span>
-              <span style={{
-                fontSize: '0.68rem', letterSpacing: '0.18em', textTransform: 'uppercase',
-                color: 'rgba(240,237,230,0.35)', fontFamily: 'DM Sans, sans-serif',
-              }}>
+              <span className={styles.linkSub}>
                 {link.sub}
               </span>
             </a>
           ))}
         </div>
 
-        {/* Footer bar */}
-        <div style={{
-          marginTop: '6rem', paddingTop: '2rem',
-          borderTop: '1px solid var(--surface)',
-          display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
-        }}>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.45)', fontFamily: 'DM Sans, sans-serif' }}>
+        <div className={styles.footer}>
+          <span className={styles.footerText}>
             Raguram R · Full Stack Developer · 2025
           </span>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(240,237,230,0.45)', fontFamily: 'DM Sans, sans-serif' }}>
+          <span className={styles.footerText}>
             Built with React + GSAP + Lenis
           </span>
         </div>
 
-        {/* Background lime glow (bottom left) */}
-        <div style={{
-          position: 'absolute', bottom: -100, left: -100,
-          width: 350, height: 350, borderRadius: '50%',
-          background: 'var(--lime)', opacity: 0.04,
-          filter: 'blur(80px)', pointerEvents: 'none',
-        }} />
+        <div className={styles.bgGlow} />
       </div>
-      
-      {/* Blinking cursor keyframes */}
-      <style>{`
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-      `}</style>
     </section>
   )
 }
@@ -225,10 +163,8 @@ function TerminalBlock() {
             currentText[currentLineIdx] = targetLine.substring(0, currentCharIdx + 1);
             setTypedLines([...currentText]);
             currentCharIdx++;
-            // Fast typing speed (5ms - 15ms)
             timeouts.push(setTimeout(typeChar, Math.random() * 10 + 5)); 
           } else {
-            // Line finished, wait a bit then start next line
             currentLineIdx++;
             currentCharIdx = 0;
             if (currentLineIdx < terminalLines.length) {
@@ -248,67 +184,32 @@ function TerminalBlock() {
   }, [])
 
   return (
-    <div ref={containerRef} style={{
-      width: '100%',
-      backgroundColor: 'rgba(20, 20, 25, 0.6)',
-      border: '1px solid #3A3A3A',
-      borderRadius: '8px',
-      padding: '2rem',
-      fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-      fontSize: 'clamp(0.85rem, 1.5vw, 1.1rem)',
-      color: 'rgba(240,237,230,0.6)',
-      lineHeight: 1.8,
-      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)',
-      backdropFilter: 'blur(10px)',
-      minHeight: '260px'
-    }}>
-      {/* Mac OS dot controls */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ff5f56' }} />
-        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#ffbd2e' }} />
-        <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#27c93f' }} />
+    <div ref={containerRef} className={styles.terminal}>
+      <div className={styles.terminalControls}>
+        <div className={`${styles.controlDot} ${styles.red}`} />
+        <div className={`${styles.controlDot} ${styles.yellow}`} />
+        <div className={`${styles.controlDot} ${styles.green}`} />
       </div>
 
       <div>
         {typedLines.map((line, idx) => {
-          const isCompleteLine = idx < typedLines.length - 1 || line.length === terminalLines[idx].length;
           const fullLineText = terminalLines[idx];
+          const isHighlighted = fullLineText.includes('target:') || fullLineText.includes('status:');
           
           return (
-            <div key={idx} style={{
-              color: fullLineText.includes('target:') || fullLineText.includes('status:') ? 'var(--lime)' : 'inherit',
-              fontWeight: fullLineText.includes('target:') || fullLineText.includes('status:') ? 600 : 400
-            }}>
-              <span style={{ color: '#00ff88', marginRight: '10px' }}>&gt;</span>
+            <div key={idx} className={isHighlighted ? styles.lime : ''} style={{ fontWeight: isHighlighted ? 600 : 400 }}>
+              <span className={styles.linePrefix}>&gt;</span>
               {line}
-              {/* Show blinking cursor only on the very last line being typed */}
               {idx === typedLines.length - 1 && (
-                <div style={{ 
-                  display: 'inline-block',
-                  width: '10px', 
-                  height: '1.2em', 
-                  backgroundColor: 'var(--lime)', 
-                  verticalAlign: 'bottom',
-                  marginLeft: '4px',
-                  animation: 'blink 1s step-end infinite'
-                }} />
+                <div className={styles.cursor} />
               )}
             </div>
           )
         })}
-        {/* Fallback cursor if typing hasn't started */}
         {typedLines.length === 0 && (
           <div>
-            <span style={{ color: '#00ff88', marginRight: '10px' }}>&gt;</span>
-            <div style={{ 
-              display: 'inline-block',
-              width: '10px', 
-              height: '1.2em', 
-              backgroundColor: 'var(--lime)', 
-              verticalAlign: 'bottom',
-              marginLeft: '4px',
-              animation: 'blink 1s step-end infinite'
-            }} />
+            <span className={styles.linePrefix}>&gt;</span>
+            <div className={styles.cursor} />
           </div>
         )}
       </div>

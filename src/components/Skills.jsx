@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import styles from './Skills.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -135,37 +136,21 @@ export default function Skills() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="skills" style={{
-      position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden',
-      background: '#0A0A0F', perspective: '1500px'
-    }}>
+    <section ref={sectionRef} id="skills" className={styles.container}>
       {/* Structural Slats */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 100, pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}>
+      <div className={styles.slatsContainer}>
         {Array(10).fill(0).map((_, i) => (
-          <div key={i} ref={el => slatsRef.current[i] = el} style={{
-            flex: 1, background: 'var(--bg)', borderBottom: '1px solid rgba(232,255,71,0.05)',
-            transformOrigin: 'top center'
-          }} />
+          <div key={i} ref={el => slatsRef.current[i] = el} className={styles.slat} />
         ))}
       </div>
 
-      <div ref={masterPinRef} style={{ position: 'relative', height: '100vh', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div ref={masterPinRef} className={styles.masterPin}>
         
         {/* The Scanning Laser Line */}
-        <div ref={laserRef} style={{
-          position: 'absolute', left: 0, width: '100%', height: '4px',
-          background: 'linear-gradient(90deg, transparent, var(--lime), transparent)',
-          boxShadow: '0 0 40px var(--lime), 0 0 80px var(--lime)',
-          zIndex: 50, pointerEvents: 'none', transform: 'translateY(-50%)',
-          willChange: 'top'
-        }} />
+        <div ref={laserRef} className={styles.laser} />
 
         {/* Bento Grid Layout */}
-        <div style={{
-          position: 'relative', width: '90%', maxWidth: '1200px',
-          display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gridAutoRows: 'minmax(180px, auto)',
-          gap: '20px', padding: '20px', zIndex: 10, transformStyle: 'preserve-3d'
-        }}>
+        <div className={styles.bentoGrid}>
           {GROUPS.map((group, i) => (
             <BentoCard 
               key={i}
@@ -179,9 +164,9 @@ export default function Skills() {
         </div>
 
         {/* Section label */}
-        <div style={{ position: 'absolute', top: '4rem', left: 'clamp(2rem,6vw,6rem)', display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className={styles.sectionLabel}>
           <span className="section-label">04 · Skills</span>
-          <div style={{ width: 40, height: 1, background: '#3A3A3A' }} />
+          <div className={styles.labelLine} />
         </div>
       </div>
     </section>
@@ -199,26 +184,17 @@ const BentoCard = React.forwardRef(({ group, i, laserRef, scrollProgress }, ref)
   return (
     <div 
       ref={ref} 
+      className={styles.card}
       style={{
-        ...gridStyles[i],
-        background: 'rgba(255, 255, 255, 0.02)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(240, 237, 230, 0.08)',
-        borderRadius: '24px',
-        padding: '2.5rem',
-        display: 'flex', flexDirection: 'column', gap: '1.5rem',
-        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)',
-        willChange: 'transform, opacity'
+        ...gridStyles[i]
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3 className="font-display" style={{ 
-          fontSize: '0.9rem', color: group.color, letterSpacing: '0.2em', fontWeight: 700 
-        }}>{group.title}</h3>
-        <div style={{ width: 8, height: 8, borderRadius: '50%', background: group.color, opacity: 0.5 }} />
+      <div className={styles.cardHeader}>
+        <h3 className={`${styles.cardTitle} font-display`} style={{ color: group.color }}>{group.title}</h3>
+        <div className={styles.cardDot} style={{ background: group.color }} />
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+      <div className={styles.chipsContainer}>
         {group.skills.map((skill, idx) => (
           <SkillChip 
             key={idx} 
@@ -230,7 +206,8 @@ const BentoCard = React.forwardRef(({ group, i, laserRef, scrollProgress }, ref)
       </div>
     </div>
   )
-})
+}
+)
 
 function SkillChip({ label, parentProgress, color }) {
   const chipRef = useRef(null)
@@ -257,18 +234,13 @@ function SkillChip({ label, parentProgress, color }) {
   return (
     <span 
       ref={chipRef}
+      className={styles.chip}
       style={{
-        padding: '10px 20px',
         background: isLit ? `${color}15` : 'rgba(255,255,255,0.03)',
-        borderRadius: '12px',
         border: `1px solid ${isLit ? color : 'rgba(240,237,230,0.1)'}`,
         color: isLit ? '#F0EDE6' : 'rgba(240,237,230,0.35)',
-        fontFamily: 'Clash Display, DM Sans, sans-serif',
-        fontSize: '0.85rem',
         fontWeight: isLit ? 600 : 500,
-        transition: 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
         boxShadow: isLit ? `0 0 15px ${color}30` : 'none',
-        whiteSpace: 'nowrap'
       }}
     >
       {label}

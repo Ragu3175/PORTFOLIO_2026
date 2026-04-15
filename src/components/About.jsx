@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import styles from './About.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,70 +137,37 @@ export default function About() {
     opacity: 0,
     willChange: 'transform, opacity'
   };
-
   return (
-    <section ref={sectionRef} id="about" style={{
-      position: 'relative', width: '100%', height: '100vh',
-      background: 'var(--bg)', color: 'var(--cream)',
-      padding: '0 clamp(1.5rem,6vw,6rem)',
-      overflow: 'hidden',
-      display: 'flex', flexDirection: 'column', justifyContent: 'center'
-    }}>
+    <section ref={sectionRef} id="about" className={styles.container}>
       {/* Immersive Zoom Number */}
-      <div ref={zoomNumRef} style={{
-        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-        fontSize: 'clamp(25rem, 50vw, 50rem)', fontWeight: 900, color: 'var(--surface)',
-        zIndex: 0, pointerEvents: 'none', fontFamily: 'var(--font-display)', lineHeight: 0.8,
-        transformOrigin: 'center center'
-      }}>
+      <div ref={zoomNumRef} className={styles.zoomNumber}>
         03
       </div>
 
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1.3fr)', gap: '6rem',
-        position: 'relative', zIndex: 2, alignItems: 'center'
-      }}>
+      <div className={styles.mainGrid}>
         {/* =========================================
             LEFT COLUMN: Sticky Biographical Section
             ========================================= */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, width: '100%' }}>
+        <div className={styles.leftCol}>
+          <div className={styles.labelWrapper}>
             <span className="section-label">03 · About</span>
-            <div style={{ width: 80, height: 1, background: 'var(--lime)' }} />
+            <div className={styles.labelLine} />
           </div>
 
-          <div style={{
-            position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1/1',
-            borderRadius: '50%', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
-          }}>
-            <div ref={photoRef} style={{
-              width: '100%', height: '100%', background: '#0A0A0F',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}>
-              <img src="/Profile.png" alt="Raguram R" style={{
-                width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.05)'
-              }} />
+          <div className={styles.photoWrapper}>
+            <div ref={photoRef} className={styles.photoFilter}>
+              <img src="/Profile.png" alt="Raguram R" className={styles.profileImg} />
             </div>
-            <div style={{
-              position: 'absolute', bottom: '10%', width: '100%', textAlign: 'center',
-              fontSize: '0.65rem', color: 'var(--lime)', fontWeight: 700, letterSpacing: '0.3em',
-              zIndex: 10, textShadow: '0 2px 10px rgba(0,0,0,0.5)'
-            }}>
+            <div className={styles.photoOverlayText}>
               RAGURAM R / CBE
             </div>
           </div>
 
-          <div style={{ maxWidth: '440px' }}>
-            <p style={{
-              color: 'var(--cream)', fontSize: 'clamp(1.4rem, 2.5vw, 2.2rem)', lineHeight: 1.25,
-              fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: '1.5rem'
-            }}>
+          <div className={styles.bioTextWrapper}>
+            <p className={styles.headline}>
               Full-stack developer specialising in the MERN stack and high-fidelity interfaces.
             </p>
-            <p style={{
-              color: 'rgba(240,237,230,0.6)', fontSize: '1.05rem', lineHeight: 1.8,
-              fontFamily: 'DM Sans, sans-serif'
-            }}>
+            <p className={styles.subtext}>
               I build performant web apps that ship on time, scale when needed, and hold up in production. Focus is on robust architecture wrapped in cinematic UI.
             </p>
           </div>
@@ -208,20 +176,16 @@ export default function About() {
         {/* =========================================
             RIGHT COLUMN: Sequenced Absolute Cards
             ========================================= */}
-        <div ref={rightColRef} style={{ position: 'relative', minHeight: '650px', width: '100%', perspective: '1200px' }}>
+        <div ref={rightColRef} className={styles.rightCol}>
 
           {/* Card 1: Timeline Log */}
-          <div ref={card1Ref} style={{ ...cardStyle }}>
-            <div style={{
-              background: 'rgba(26,26,34,0.4)', padding: '5rem 4rem', borderRadius: '24px',
-              border: '1px solid rgba(232,255,71,0.08)', backdropFilter: 'blur(12px)',
-              boxShadow: '0 30px 60px rgba(0,0,0,0.4)'
-            }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '3rem', color: 'var(--lime)' }}>
+          <div ref={card1Ref} className={styles.card}>
+            <div className={styles.bentoContent}>
+              <h3 className={styles.bentoTitle}>
                 Journey Log
               </h3>
-              <div style={{ position: 'relative', paddingLeft: '3.5rem', display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
-                <svg width="4" height="100%" style={{ position: 'absolute', left: '0', top: 0 }} fill="none">
+              <div className={styles.timelineWrapper}>
+                <svg width="4" height="100%" className={styles.timelinePath} fill="none">
                    <path d="M 2 0 L 2 1000" stroke="var(--surface)" strokeWidth="2" opacity="0.3" />
                    <path ref={svgPathRef} d="M 2 0 L 2 1000" stroke="var(--lime)" strokeWidth="3" strokeLinecap="round" />
                 </svg>
@@ -231,11 +195,11 @@ export default function About() {
                   { year: '2023', title: 'MERN Stack Certification', desc: 'Heavy transition into full-stack web architecture with Novi Tech.' },
                   { year: '2024', title: 'First Deployed Product', desc: 'Shipped and scaled initial application architecture to live users.' }
                 ].map((item, i) => (
-                  <div key={i} style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: '-3.8rem', top: 4, width: 14, height: 14, borderRadius: '50%', background: 'var(--bg)', border: '3px solid var(--lime)', boxShadow: '0 0 15px rgba(232,255,71,0.4)' }} />
-                    <div style={{ fontSize: '0.85rem', color: 'var(--lime)', fontWeight: 800, letterSpacing: '0.15em', marginBottom: '0.5rem' }}>{item.year}</div>
-                    <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-display)', color: 'var(--cream)', marginBottom: '0.5rem' }}>{item.title}</div>
-                    <div style={{ fontSize: '0.95rem', color: 'rgba(240,237,230,0.5)', lineHeight: 1.6 }}>{item.desc}</div>
+                  <div key={i} className={styles.timelineItem}>
+                    <div className={styles.timelineDot} />
+                    <div className={styles.yearText}>{item.year}</div>
+                    <div className={styles.itemTitle}>{item.title}</div>
+                    <div className={styles.itemDesc}>{item.desc}</div>
                   </div>
                 ))}
               </div>
@@ -243,14 +207,10 @@ export default function About() {
           </div>
 
           {/* Card 2: Philosophy Quote */}
-          <div ref={card2Ref} style={{ ...cardStyle }}>
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(232,255,71,0.1) 0%, rgba(10,10,15,0.9) 100%)',
-              padding: '7rem 5rem', borderRadius: '24px', border: '1px solid rgba(232,255,71,0.2)',
-              boxShadow: '0 40px 80px rgba(0,0,0,0.6)', position: 'relative', overflow: 'hidden'
-            }}>
-              <div style={{ position: 'absolute', top: -30, left: -20, fontSize: '18rem', color: 'rgba(232,255,71,0.06)', fontFamily: 'var(--font-display)', lineHeight: 0.7 }}>"</div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 3.5vw, 4.5rem)', fontWeight: 700, lineHeight: 1.1, position: 'relative', zIndex: 2 }}>
+          <div ref={card2Ref} className={styles.card}>
+            <div className={styles.philosophyContent}>
+              <div className={styles.quoteMark}>"</div>
+              <h2 className={styles.quoteText}>
                 I don't just write code.<br />
                 <span style={{ color: 'var(--lime)' }}>I build experiences.</span>
               </h2>
@@ -258,22 +218,19 @@ export default function About() {
           </div>
 
           {/* Card 3: Performance Metrics */}
-          <div ref={card3Ref} style={{ ...cardStyle }}>
-            <div style={{
-              background: 'rgba(26,26,34,0.4)', padding: '5rem 4rem', borderRadius: '24px',
-              border: '1px solid var(--surface)', backdropFilter: 'blur(12px)'
-            }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '4rem', color: 'var(--lime)' }}>
+          <div ref={card3Ref} className={styles.card}>
+            <div className={styles.metricsContent}>
+              <h3 className={styles.bentoTitle}>
                 Metrics
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem' }}>
+              <div className={styles.metricsGrid}>
                 {STATS.map((stat, i) => (
                   <div key={i} ref={el => statsRefs.current[i] = el}>
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3.5rem, 5vw, 5.5rem)', fontWeight: 700, color: 'var(--cream)', display: 'block', lineHeight: 1, marginBottom: '0.5rem' }}>
+                    <span className={styles.metricValue}>
                       <span className="stat-num">0</span>
-                      <span style={{ color: 'var(--lime)', fontSize: '0.7em' }}>{stat.suffix}</span>
+                      <span className={styles.metricSuffix}>{stat.suffix}</span>
                     </span>
-                    <p style={{ fontSize: '0.8rem', color: 'rgba(240,237,230,0.4)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                    <p className={styles.metricLabel}>
                       {stat.label}
                     </p>
                   </div>
@@ -285,5 +242,5 @@ export default function About() {
         </div>
       </div>
     </section>
-  );
+  )
 }
